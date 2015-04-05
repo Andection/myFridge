@@ -9,9 +9,11 @@ namespace MyFridge
     {
         public static Page GetMainPage()
         {
-            var navigationPage = new NavigationPage(new MainPage()
+            var mainViewModel = new MainViewModel(DependencyService.Get<IScannerService>(), new ProductService());
+
+            var navigationPage = new NavigationPage(new MainPage
             {
-                BindingContext = new MainViewModel(DependencyService.Get<IScannerService>())
+                BindingContext = mainViewModel
             });
             return navigationPage;
         }

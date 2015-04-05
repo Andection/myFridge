@@ -2,9 +2,11 @@ using System.Threading.Tasks;
 using MyFridge.Droid.Services;
 using MyFridge.Services;
 using Xamarin.Forms;
+using ZXing;
 using ZXing.Mobile;
 
 [assembly: Dependency(typeof(ScannerService))]
+
 namespace MyFridge.Droid.Services
 {
     internal class ScannerService : IScannerService
@@ -20,7 +22,9 @@ namespace MyFridge.Droid.Services
 
             var result = await scanner.Scan();
 
-            return new ScannerResult(result.Text);
+            return result.BarcodeFormat == BarcodeFormat.EAN_13 || result.BarcodeFormat == BarcodeFormat.EAN_8
+                ? ScannerResult.Success(result.Text)
+                : ScannerResult.Failed("Invalid barcode");
         }
     }
 }

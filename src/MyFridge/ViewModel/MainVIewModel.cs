@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.ServiceModel.Channels;
 using System.Windows.Input;
 using MyFridge.Annotations;
 using MyFridge.Services;
@@ -11,12 +12,14 @@ namespace MyFridge.ViewModel
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly IScannerService _scannerService;
+        private readonly ProductService _productService;
         private string _itemToAdd;
         private ICommand _addCommand;
         private ICommand _scanCommand;
-        public MainViewModel(IScannerService scannerService)
+        public MainViewModel(IScannerService scannerService, ProductService productService)
         {
             _scannerService = scannerService;
+            _productService = productService;
             Items = new ObservableCollection<ItemViewModel>();
         }
 
@@ -46,15 +49,20 @@ namespace MyFridge.ViewModel
             ItemToAdd = string.Empty;
         }
 
-        private void OnScan()
+        private async void OnScan()
         {
-            _scannerService.Scan().ContinueWith(t =>
+            var scanResult = await _scannerService.Scan();
+
+            if (scanResult.IsSuccess)
             {
-                if (!t.IsFaulted)
-                {
-                    Items.Add(new ItemViewModel(t.Result.Text, this));
-                }
-            });
+                var productName = await _productService.FindByBarcode(scanResult.Barcode);
+
+                Items.Add(new ItemViewModel(productName, this));
+            }
+            else
+            {
+                //todo: show toast
+            }
         }
 
         public ObservableCollection<ItemViewModel> Items { get; private set; }
