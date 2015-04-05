@@ -1,4 +1,5 @@
-﻿using MyFridge.Views;
+﻿using MyFridge.ViewModel;
+using MyFridge.Views;
 using Xamarin.Forms;
 
 namespace MyFridge
@@ -7,7 +8,10 @@ namespace MyFridge
     {
         public static Page GetMainPage()
         {
-            var navigationPage = new NavigationPage(new MainPage());
+            var navigationPage = new NavigationPage(new MainPage()
+            {
+                BindingContext = new MainViewModel()
+            });
             return navigationPage;
         }
     }

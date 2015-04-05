@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyFridge.Views.MainPage">
+    <Grid>
+  		<Grid.RowDefinitions>
+  			<RowDefinition Height="Auto"/>
+  			<RowDefinition Height="*"/>
+  		</Grid.RowDefinitions>
+
+  		<Grid Grid.Row="0">
+  			<Grid.ColumnDefinitions>
+  				<ColumnDefinition Width="*"/>
+  				<ColumnDefinition Width="Auto"/>
+  			</Grid.ColumnDefinitions>
+  			<Entry Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Text="{Binding ItemToAdd}"/>
+  			<Button Grid.Column="1" Text="Add" HorizontalOptions="EndAndExpand" VerticalOptions="FillAndExpand" Command="{Binding AddItemCommand}"/>
+  		</Grid>
+
+  		<ListView Grid.Row="1" ItemsSource="{Binding Items}" HasUnevenRows="true" x:Name="itemsListView">
+  			<ListView.ItemTemplate>
+  			<DataTemplate>
+  			<ViewCell>
+  			<ViewCell.View>
+  				<Grid Grid.Row="0" ColumnSpacing="5" Padding="5">
+  					<Grid.ColumnDefinitions>
+  						<ColumnDefinition Width="*"/>
+  						<ColumnDefinition Width="Auto"/>
+  					</Grid.ColumnDefinitions>
+  					<Label Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" Text="{Binding Name}"/>
+  					<Button Grid.Column="1" Text="Remove" HorizontalOptions="EndAndExpand" VerticalOptions="FillAndExpand" Command="{Binding RemoveCommand}" />
+  				</Grid>
+  			</ViewCell.View>
+  			</ViewCell>
+  				</DataTemplate>
+  			</ListView.ItemTemplate>
+  		</ListView>
+    </Grid>
+</ContentPage>
