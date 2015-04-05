@@ -3,17 +3,20 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using MyFridge.Annotations;
+using MyFridge.Services;
 using Xamarin.Forms;
 
 namespace MyFridge.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        private readonly IScannerService _scannerService;
         private string _itemToAdd;
         private ICommand _addCommand;
-
-        public MainViewModel()
+        private ICommand _scanCommand;
+        public MainViewModel(IScannerService scannerService)
         {
+            _scannerService = scannerService;
             Items = new ObservableCollection<ItemViewModel>();
         }
 
@@ -32,10 +35,26 @@ namespace MyFridge.ViewModel
             get { return _addCommand ?? (_addCommand = new Command(OnAdd)); }
         }
 
+        public ICommand ScanCommand
+        {
+            get { return _scanCommand ?? (_scanCommand = new Command(OnScan)); }
+        }
+
         private void OnAdd()
         {
             Items.Add(new ItemViewModel(ItemToAdd, this));
             ItemToAdd = string.Empty;
+        }
+
+        private void OnScan()
+        {
+            _scannerService.Scan().ContinueWith(t =>
+            {
+                if (!t.IsFaulted)
+                {
+                    Items.Add(new ItemViewModel(t.Result.Text, this));
+                }
+            });
         }
 
         public ObservableCollection<ItemViewModel> Items { get; private set; }

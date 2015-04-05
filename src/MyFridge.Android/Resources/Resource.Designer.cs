@@ -26,6 +26,9 @@ namespace MyFridge.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::ZXing.Mobile.Resource.Id.contentFrame = global::MyFridge.Droid.Resource.Id.contentFrame;
+			global::ZXing.Mobile.Resource.Layout.zxingscanneractivitylayout = global::MyFridge.Droid.Resource.Layout.zxingscanneractivitylayout;
+			global::ZXing.Mobile.Resource.Layout.zxingscannerfragmentlayout = global::MyFridge.Droid.Resource.Layout.zxingscannerfragmentlayout;
 		}
 		
 		public partial class Attribute
@@ -50,6 +53,9 @@ namespace MyFridge.Droid
 			// aapt resource value: 0x7f020001
 			public const int monoandroidsplash = 2130837505;
 			
+			// aapt resource value: 0x7f020002
+			public const int scan = 2130837506;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -60,11 +66,46 @@ namespace MyFridge.Droid
 			}
 		}
 		
-		public partial class Style
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f050000
+			public const int contentFrame = 2131034112;
+			
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Id()
+			{
+			}
+		}
+		
+		public partial class Layout
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int Mono_Android_Theme_Splash = 2130903040;
+			public const int zxingscanneractivitylayout = 2130903040;
+			
+			// aapt resource value: 0x7f030001
+			public const int zxingscannerfragmentlayout = 2130903041;
+			
+			static Layout()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Layout()
+			{
+			}
+		}
+		
+		public partial class Style
+		{
+			
+			// aapt resource value: 0x7f040000
+			public const int Mono_Android_Theme_Splash = 2130968576;
 			
 			static Style()
 			{

@@ -1,4 +1,5 @@
-﻿using MyFridge.ViewModel;
+﻿using MyFridge.Services;
+using MyFridge.ViewModel;
 using MyFridge.Views;
 using Xamarin.Forms;
 
@@ -10,7 +11,7 @@ namespace MyFridge
         {
             var navigationPage = new NavigationPage(new MainPage()
             {
-                BindingContext = new MainViewModel()
+                BindingContext = new MainViewModel(DependencyService.Get<IScannerService>())
             });
             return navigationPage;
         }
