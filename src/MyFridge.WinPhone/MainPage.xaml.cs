@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-
+﻿using Microsoft.Phone.Controls;
+using Toasts.Forms.Plugin.WindowsPhone;
 using Xamarin.Forms;
 
 
@@ -20,6 +12,7 @@ namespace MyFridge.WinPhone
             InitializeComponent();
 
             Forms.Init();
+            ToastNotificatorImplementation.Init(); //you can pass additional parameters here
             Content = MyFridge.App.GetMainPage().ConvertPageToUIElement(this);
         }
     }
