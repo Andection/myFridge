@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="Controls\ItemCell.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Domain\Item.cs" />
     <Compile Include="Extensions\CollectionExt.cs" />

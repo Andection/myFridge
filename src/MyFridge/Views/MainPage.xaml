@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:MyFridge.Converters;assembly=MyFridge"
+             xmlns:controls="clr-namespace:MyFridge.Controls;assembly=MyFridge"
              x:Class="MyFridge.Views.MainPage">
   <ContentPage.Resources>
     <ResourceDictionary>
@@ -39,8 +40,8 @@
     <ListView Grid.Row="1" ItemsSource="{Binding Items}" HasUnevenRows="true" x:Name="itemsListView">
       <ListView.ItemTemplate>
         <DataTemplate>
-          <ViewCell>
-            <ViewCell.View>
+          <controls:ItemCell>
+            <controls:ItemCell>
               <Grid Grid.Row="0" ColumnSpacing="5" Padding="5">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*"/>
@@ -49,8 +50,8 @@
                 <Label Grid.Column="0" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" Text="{Binding Name}"/>
                 <Button Grid.Column="1" Text="Remove" HorizontalOptions="EndAndExpand" VerticalOptions="FillAndExpand" Command="{Binding RemoveCommand}" />
               </Grid>
-            </ViewCell.View>
-          </ViewCell>
+            </controls:ItemCell>
+          </controls:ItemCell>
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
