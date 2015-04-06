@@ -1,25 +1,28 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.ServiceModel.Channels;
 using System.Windows.Input;
 using MyFridge.Annotations;
 using MyFridge.Services;
+using Toasts.Forms.Plugin.Abstractions;
 using Xamarin.Forms;
 
 namespace MyFridge.ViewModel
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : BaseViewModel
     {
         private readonly IScannerService _scannerService;
         private readonly ProductService _productService;
+        private readonly IToastNotificator _toastNotificationService;
         private string _itemToAdd;
         private ICommand _addCommand;
         private ICommand _scanCommand;
-        public MainViewModel(IScannerService scannerService, ProductService productService)
+        public MainViewModel(IScannerService scannerService, ProductService productService, IToastNotificator toastNotificationService)
         {
             _scannerService = scannerService;
             _productService = productService;
+            _toastNotificationService = toastNotificationService;
             Items = new ObservableCollection<ItemViewModel>();
         }
 
@@ -35,7 +38,7 @@ namespace MyFridge.ViewModel
 
         public ICommand AddItemCommand
         {
-            get { return _addCommand ?? (_addCommand = new Command(OnAdd)); }
+            get { return _addCommand ?? (_addCommand = new Command(OnAdd, p => !string.IsNullOrWhiteSpace(ItemToAdd))); }
         }
 
         public ICommand ScanCommand
@@ -43,7 +46,7 @@ namespace MyFridge.ViewModel
             get { return _scanCommand ?? (_scanCommand = new Command(OnScan)); }
         }
 
-        private void OnAdd()
+        private void OnAdd(object parameter)
         {
             Items.Add(new ItemViewModel(ItemToAdd, this));
             ItemToAdd = string.Empty;
@@ -55,17 +58,55 @@ namespace MyFridge.ViewModel
 
             if (scanResult.IsSuccess)
             {
-                var productName = await _productService.FindByBarcode(scanResult.Barcode);
-
-                Items.Add(new ItemViewModel(productName, this));
+                IsBusy = true;
+                try
+                {
+                    var productName = await _productService.FindByBarcode(scanResult.Barcode);
+                    if (!string.IsNullOrWhiteSpace(productName))
+                    {
+                        Items.Add(new ItemViewModel(productName, this));
+                    }
+                    else
+                    {
+                        await _toastNotificationService.Notify(ToastNotificationType.Warning, "", "unknown position", TimeSpan.FromSeconds(2));
+                    }
+                }
+                catch
+                {
+                    _toastNotificationService.Notify(ToastNotificationType.Warning, "", "can not connect to remote server", TimeSpan.FromSeconds(2));
+                }
+                IsBusy = false;
             }
             else
             {
-                //todo: show toast
+                await _toastNotificationService.Notify(ToastNotificationType.Warning, "", scanResult.ErrorMessage, TimeSpan.FromSeconds(2));
             }
         }
 
         public ObservableCollection<ItemViewModel> Items { get; private set; }
+    }
+
+    public class ItemViewModel : INotifyPropertyChanged
+    {
+        private readonly MainViewModel _host;
+        private ICommand _removeItemCommand;
+
+        public ItemViewModel(string name, MainViewModel host)
+        {
+            _host = host;
+            Name = name;
+        }
+
+        public string Name { get; private set; }
+        public ICommand RemoveCommand
+        {
+            get { return _removeItemCommand ?? (_removeItemCommand = new Command(OnRemove)); }
+        }
+
+        private void OnRemove()
+        {
+            _host.Items.Remove(this);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -77,26 +118,32 @@ namespace MyFridge.ViewModel
         }
     }
 
-    public class ItemViewModel : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged
     {
-        private readonly MainViewModel _host;
-        private ICommand _removeItemCommand;
+        private bool _isBusy;
 
-        public ItemViewModel(string name,MainViewModel host)
+        public bool IsBusy
         {
-            _host = host;
-            Name = name;
+            get { return _isBusy; }
+            set
+            {
+                _isBusy = value;
+                OnPropertyChanged();
+            }
         }
 
-        public string Name { get;private set; }
-        public ICommand RemoveCommand
+        protected void BusyIndication(Action action)
         {
-            get { return _removeItemCommand ?? (_removeItemCommand = new Command(OnRemove)); }
-        }
+            IsBusy = true;
 
-        private void OnRemove()
-        {
-            _host.Items.Remove(this);
+            try
+            {
+                action();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

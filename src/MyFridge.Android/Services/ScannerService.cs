@@ -24,7 +24,7 @@ namespace MyFridge.Droid.Services
 
             return result.BarcodeFormat == BarcodeFormat.EAN_13 || result.BarcodeFormat == BarcodeFormat.EAN_8
                 ? ScannerResult.Success(result.Text)
-                : ScannerResult.Failed("Invalid barcode");
+                : ScannerResult.Failed("not support barcode format");
         }
     }
 }

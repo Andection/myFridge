@@ -166,6 +166,12 @@
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
+    <Reference Include="Toasts.Forms.Plugin.Abstractions">
+      <HintPath>..\packages\Toasts.Forms.Plugin.1.0.6.18\lib\wp8\Toasts.Forms.Plugin.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Toasts.Forms.Plugin.WindowsPhone">
+      <HintPath>..\packages\Toasts.Forms.Plugin.1.0.6.18\lib\wp8\Toasts.Forms.Plugin.WindowsPhone.dll</HintPath>
+    </Reference>
     <Reference Include="Xamarin.Forms.Core, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Xamarin.Forms.1.4.1.6349\lib\WP80\Xamarin.Forms.Core.dll</HintPath>
